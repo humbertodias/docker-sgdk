@@ -1,3 +1,5 @@
+[![ci-docker](https://github.com/humbertodias/docker-sgdk/actions/workflows/deploy.yml/badge.svg)](https://github.com/humbertodias/docker-sgdk/actions/workflows/deploy.yml)
+
 # Introduction
 
 Dockerfile based [SGDK](https://github.com/Stephane-D/SGDK/) toolchain.
