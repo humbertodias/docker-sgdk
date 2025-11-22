@@ -23,13 +23,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Load environment variables from selected file
-        run: |
-          echo "Using version: ${{ github.event.inputs.target_version }}"
-          echo "SGDK_RELEASE=${{ github.event.inputs.target_version }}" >> $GITHUB_ENV
-          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
-          echo "DOCKERHUB_REPONAME=docker-sgdk" >> $GITHUB_ENV
-
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -42,7 +35,7 @@ jobs:
           DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKER_PASS: ${{ secrets.DOCKERHUB_TOKEN }}
         with:
-          destination_container_repo: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_REPONAME }}
+          destination_container_repo: ${{ secrets.DOCKERHUB_USERNAME }}/docker-sgdk
           provider: dockerhub
           short_description: 'A Docker Image for SGDK Development'
           readme_file: 'README.md'
@@ -60,6 +53,5 @@ jobs:
           platforms: ${{ matrix.platform }}
           push: true
           provenance: false
-          build-args: |
-            SGDK_RELEASE=${{ env.SGDK_RELEASE }}
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.TAG_NAME }}
+          build-args: SGDK_RELEASE=${{ github.event.inputs.target_version }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.inputs.target_version }}
