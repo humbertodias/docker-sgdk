@@ -54,4 +54,4 @@ jobs:
           push: true
           provenance: false
           build-args: SGDK_RELEASE=${{ github.event.inputs.target_version }}
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.inputs.target_version }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/docker-sgdk:${{ github.event.inputs.target_version }}
