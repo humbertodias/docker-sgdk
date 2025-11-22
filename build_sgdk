@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+set -e
+
+NPROC=$(($(nproc) + 1))
+
+SGDKDIR="$PWD"
+BINDIR="$SGDKDIR/bin"
+BUILDDIR=/tmp/build
+
+mkdir -p "$BUILDDIR"
+
+echo "### Cleaning Windows stuff ###"
+
+rm "$BINDIR"/{*.exe,*.dll}
+rm "$SGDKDIR/lib/"*.a
+
+echo "### BUILDING bintos ###"
+
+cd $SGDKDIR/tools/bintos/src
+gcc -Wall -O3 bintos.c -o bintos
+strip bintos
+cp bintos "$BINDIR"
+
+echo "### BUILDING xgmtool ###"
+
+cd $SGDKDIR/tools/xgmtool
+gcc -Wall -O3 -Iinc src/*.c -lm -o xgmtool
+strip xgmtool
+cp xgmtool "$BINDIR"
+
+echo "### BUILDING convsym ###"
+
+cd $SGDKDIR/tools/convsym
+g++ -std=c++20 -O2 -pedantic-errors -Wall -Iinclude -s src/main.cpp -o convsym
+cp convsym "$BINDIR"
+
+echo "### BUILDING sjasm ###"
+
+cd "$BUILDDIR/sjasm"
+tar -xf sjasm-0.39h.tar.gz
+cd Sjasm-0.39h/Sjasm
+mv Sjasm.cpp sjasm.cpp
+make -f ../Makefile
+strip sjasm
+cp sjasm "$BINDIR"
+
+echo "### BUILDING maccer ###"
+
+cd "$BUILDDIR/maccer"
+unzip maccer-026k02.zip
+gcc main.c -O3 -DVERSION_STRING="\"2.6\"" -DKMOD_VERSION="\"0.2\"" -lm -o mac68k
+strip mac68k
+cp mac68k "$BINDIR"
+
+echo "### BUILDING SGDK LIBS ###"
+
+export PATH="$PATH:$BINDIR"
+export GDK="$SGDKDIR"
+cd $SGDKDIR
+make -f makelib.gen -j1 cleanrelease
+make -f makelib.gen -j1 release
+make -f makelib.gen -j1 cleandebug
+make -f makelib.gen -j1 debug

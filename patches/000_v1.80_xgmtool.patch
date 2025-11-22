@@ -1,0 +1,9 @@
+diff --git a/tools/xgmtool/inc/compress.h b/tools/xgmtool/inc/compress.h
+index f7cb8ac7..2d7f74c9 100644
+--- a/tools/xgmtool/inc/compress.h
++++ b/tools/xgmtool/inc/compress.h
+@@ -1,3 +1,4 @@
++#include <stdint.h>
+ 
+ typedef struct
+ {
