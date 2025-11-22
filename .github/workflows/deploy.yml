@@ -6,7 +6,7 @@ on:
       target_version:
         description: 'SGDK version'
         required: true
-        default: '2.11'
+        default: 'v2.11'
 
 jobs:
   dockerhub-push:
